@@ -1,0 +1,22 @@
+-- Future SQLite/D1 schema. Validated locally; not bound or deployed.
+PRAGMA foreign_keys = ON;
+CREATE TABLE demo_sessions (id TEXT PRIMARY KEY, owner_id TEXT NOT NULL, synthetic INTEGER NOT NULL DEFAULT 1 CHECK(synthetic=1), created_at TEXT NOT NULL, expires_at TEXT NOT NULL);
+CREATE TABLE official_sources (id TEXT PRIMARY KEY, title TEXT NOT NULL, authority TEXT NOT NULL, official_url TEXT NOT NULL UNIQUE, scope TEXT NOT NULL);
+CREATE TABLE source_versions (id TEXT PRIMARY KEY, source_id TEXT NOT NULL REFERENCES official_sources(id), version TEXT NOT NULL, published_at TEXT, retrieved_at TEXT NOT NULL, sha256 TEXT NOT NULL CHECK(length(sha256)=64), review_status TEXT NOT NULL CHECK(review_status IN ('draft','reviewed','retired')), UNIQUE(source_id,version));
+CREATE TABLE source_passages (id TEXT PRIMARY KEY, version_id TEXT NOT NULL REFERENCES source_versions(id), clause TEXT NOT NULL, original_text TEXT NOT NULL, language TEXT NOT NULL);
+CREATE TABLE requirement_rules (id TEXT PRIMARY KEY, passage_id TEXT NOT NULL REFERENCES source_passages(id), version TEXT NOT NULL, condition_json TEXT NOT NULL CHECK(json_valid(condition_json)), review_status TEXT NOT NULL DEFAULT 'draft' CHECK(review_status IN ('draft','reviewed','retired')), reviewer_id TEXT, reviewed_at TEXT, CHECK(review_status!='reviewed' OR (reviewer_id IS NOT NULL AND reviewed_at IS NOT NULL)));
+CREATE TABLE service_cases (id TEXT PRIMARY KEY, session_id TEXT NOT NULL REFERENCES demo_sessions(id) ON DELETE CASCADE, service TEXT NOT NULL CHECK(service='epassport-reissue'), context_json TEXT NOT NULL CHECK(json_valid(context_json)), created_at TEXT NOT NULL);
+CREATE TABLE document_records (id TEXT PRIMARY KEY, case_id TEXT NOT NULL REFERENCES service_cases(id) ON DELETE CASCADE, kind TEXT NOT NULL, synthetic INTEGER NOT NULL CHECK(synthetic=1), retention_until TEXT NOT NULL, content_hash TEXT);
+CREATE TABLE extracted_fields (id TEXT PRIMARY KEY, document_id TEXT NOT NULL REFERENCES document_records(id) ON DELETE CASCADE, field_name TEXT NOT NULL, original_value TEXT NOT NULL, normalized_value TEXT, confirmed_at TEXT, UNIQUE(document_id,field_name));
+CREATE TABLE verification_findings (id TEXT PRIMARY KEY, case_id TEXT NOT NULL REFERENCES service_cases(id) ON DELETE CASCADE, rule_id TEXT REFERENCES requirement_rules(id), field_id TEXT REFERENCES extracted_fields(id), status TEXT NOT NULL, created_at TEXT NOT NULL);
+CREATE TABLE evidence_events (id TEXT PRIMARY KEY, case_id TEXT NOT NULL REFERENCES service_cases(id) ON DELETE CASCADE, occurred_at TEXT NOT NULL, kind TEXT NOT NULL, description TEXT NOT NULL, source_label TEXT NOT NULL CHECK(source_label IN ('citizen-reported','uploaded-unauthenticated','institution-verified')), verification_reference TEXT, CHECK(source_label!='institution-verified' OR verification_reference IS NOT NULL));
+CREATE TABLE clarification_drafts (id TEXT PRIMARY KEY, case_id TEXT NOT NULL REFERENCES service_cases(id) ON DELETE CASCADE, language TEXT NOT NULL CHECK(language IN ('bn','en')), body TEXT NOT NULL, updated_at TEXT NOT NULL, sent_at TEXT CHECK(sent_at IS NULL));
+CREATE TABLE prompt_versions (id TEXT PRIMARY KEY, kind TEXT NOT NULL, version TEXT NOT NULL, body TEXT NOT NULL, status TEXT NOT NULL CHECK(status IN ('draft','active','retired')), UNIQUE(kind,version));
+CREATE TABLE evaluation_records (id TEXT PRIMARY KEY, run_at TEXT NOT NULL, suite_version TEXT NOT NULL, results_json TEXT NOT NULL CHECK(json_valid(results_json)));
+CREATE TABLE audit_events (id TEXT PRIMARY KEY, session_id TEXT REFERENCES demo_sessions(id) ON DELETE CASCADE, action TEXT NOT NULL, object_id TEXT, occurred_at TEXT NOT NULL);
+CREATE INDEX idx_cases_owner ON service_cases(session_id);
+CREATE INDEX idx_versions_source ON source_versions(source_id,retrieved_at);
+CREATE INDEX idx_passages_version ON source_passages(version_id);
+CREATE INDEX idx_events_case_time ON evidence_events(case_id,occurred_at);
+CREATE INDEX idx_documents_case ON document_records(case_id);
+CREATE INDEX idx_findings_case ON verification_findings(case_id);

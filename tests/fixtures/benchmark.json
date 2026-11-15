@@ -1,0 +1,362 @@
+[
+  {
+    "id": "DOC-1",
+    "group": "document consistency",
+    "expected": false,
+    "source": "SRC-03"
+  },
+  {
+    "id": "DOC-2",
+    "group": "document consistency",
+    "expected": false,
+    "source": "SRC-03"
+  },
+  {
+    "id": "DOC-3",
+    "group": "document consistency",
+    "expected": false,
+    "source": "SRC-03"
+  },
+  {
+    "id": "DOC-4",
+    "group": "document consistency",
+    "expected": false,
+    "source": "SRC-03"
+  },
+  {
+    "id": "DOC-5",
+    "group": "document consistency",
+    "expected": false,
+    "source": "SRC-03"
+  },
+  {
+    "id": "DOC-6",
+    "group": "document consistency",
+    "expected": false,
+    "source": "SRC-03"
+  },
+  {
+    "id": "DOC-7",
+    "group": "document consistency",
+    "expected": false,
+    "source": "SRC-03"
+  },
+  {
+    "id": "DOC-8",
+    "group": "document consistency",
+    "expected": false,
+    "source": "SRC-03"
+  },
+  {
+    "id": "DOC-9",
+    "group": "document consistency",
+    "expected": false,
+    "source": "SRC-03"
+  },
+  {
+    "id": "DOC-10",
+    "group": "document consistency",
+    "expected": false,
+    "source": "SRC-03"
+  },
+  {
+    "id": "DOC-11",
+    "group": "document consistency",
+    "expected": true,
+    "source": "SRC-03"
+  },
+  {
+    "id": "DOC-12",
+    "group": "document consistency",
+    "expected": true,
+    "source": "SRC-03"
+  },
+  {
+    "id": "DOC-13",
+    "group": "document consistency",
+    "expected": true,
+    "source": "SRC-03"
+  },
+  {
+    "id": "DOC-14",
+    "group": "document consistency",
+    "expected": true,
+    "source": "SRC-03"
+  },
+  {
+    "id": "DOC-15",
+    "group": "document consistency",
+    "expected": true,
+    "source": "SRC-03"
+  },
+  {
+    "id": "DOC-16",
+    "group": "document consistency",
+    "expected": true,
+    "source": "SRC-03"
+  },
+  {
+    "id": "DOC-17",
+    "group": "document consistency",
+    "expected": true,
+    "source": "SRC-03"
+  },
+  {
+    "id": "DOC-18",
+    "group": "document consistency",
+    "expected": true,
+    "source": "SRC-03"
+  },
+  {
+    "id": "DOC-19",
+    "group": "document consistency",
+    "expected": true,
+    "source": "SRC-03"
+  },
+  {
+    "id": "DOC-20",
+    "group": "document consistency",
+    "expected": true,
+    "source": "SRC-03"
+  },
+  {
+    "id": "COND-1",
+    "group": "conditional requirement",
+    "expected": false,
+    "source": "SRC-01"
+  },
+  {
+    "id": "COND-2",
+    "group": "conditional requirement",
+    "expected": false,
+    "source": "SRC-01"
+  },
+  {
+    "id": "COND-3",
+    "group": "conditional requirement",
+    "expected": false,
+    "source": "SRC-01"
+  },
+  {
+    "id": "COND-4",
+    "group": "conditional requirement",
+    "expected": false,
+    "source": "SRC-01"
+  },
+  {
+    "id": "COND-5",
+    "group": "conditional requirement",
+    "expected": false,
+    "source": "SRC-01"
+  },
+  {
+    "id": "COND-6",
+    "group": "conditional requirement",
+    "expected": false,
+    "source": "SRC-01"
+  },
+  {
+    "id": "COND-7",
+    "group": "conditional requirement",
+    "expected": false,
+    "source": "SRC-01"
+  },
+  {
+    "id": "COND-8",
+    "group": "conditional requirement",
+    "expected": true,
+    "source": "SRC-01"
+  },
+  {
+    "id": "COND-9",
+    "group": "conditional requirement",
+    "expected": true,
+    "source": "SRC-01"
+  },
+  {
+    "id": "COND-10",
+    "group": "conditional requirement",
+    "expected": true,
+    "source": "SRC-01"
+  },
+  {
+    "id": "COND-11",
+    "group": "conditional requirement",
+    "expected": true,
+    "source": "SRC-01"
+  },
+  {
+    "id": "COND-12",
+    "group": "conditional requirement",
+    "expected": true,
+    "source": "SRC-01"
+  },
+  {
+    "id": "COND-13",
+    "group": "conditional requirement",
+    "expected": true,
+    "source": "SRC-01"
+  },
+  {
+    "id": "COND-14",
+    "group": "conditional requirement",
+    "expected": true,
+    "source": "SRC-01"
+  },
+  {
+    "id": "COND-15",
+    "group": "conditional requirement",
+    "expected": true,
+    "source": "SRC-01"
+  },
+  {
+    "id": "UNCERTAIN-1",
+    "group": "uncertain / extra demand",
+    "expected": "Needs official clarification",
+    "source": "Collection limitation; no supporting passage"
+  },
+  {
+    "id": "UNCERTAIN-2",
+    "group": "uncertain / extra demand",
+    "expected": "Needs official clarification",
+    "source": "Collection limitation; no supporting passage"
+  },
+  {
+    "id": "UNCERTAIN-3",
+    "group": "uncertain / extra demand",
+    "expected": "Needs official clarification",
+    "source": "SRC-01"
+  },
+  {
+    "id": "UNCERTAIN-4",
+    "group": "uncertain / extra demand",
+    "expected": "Needs official clarification",
+    "source": "Collection limitation; no supporting passage"
+  },
+  {
+    "id": "UNCERTAIN-5",
+    "group": "uncertain / extra demand",
+    "expected": "Needs official clarification",
+    "source": "SRC-01"
+  },
+  {
+    "id": "UNCERTAIN-6",
+    "group": "uncertain / extra demand",
+    "expected": "Needs official clarification",
+    "source": "Collection limitation; no supporting passage"
+  },
+  {
+    "id": "UNCERTAIN-7",
+    "group": "uncertain / extra demand",
+    "expected": "Needs official clarification",
+    "source": "Collection limitation; no supporting passage"
+  },
+  {
+    "id": "UNCERTAIN-8",
+    "group": "uncertain / extra demand",
+    "expected": "Needs official clarification",
+    "source": "SRC-01"
+  },
+  {
+    "id": "UNCERTAIN-9",
+    "group": "uncertain / extra demand",
+    "expected": "Needs official clarification",
+    "source": "Collection limitation; no supporting passage"
+  },
+  {
+    "id": "UNCERTAIN-10",
+    "group": "uncertain / extra demand",
+    "expected": "Needs official clarification",
+    "source": "Collection limitation; no supporting passage"
+  },
+  {
+    "id": "UNCERTAIN-11",
+    "group": "uncertain / extra demand",
+    "expected": "Needs official clarification",
+    "source": "Collection limitation; no supporting passage"
+  },
+  {
+    "id": "UNCERTAIN-12",
+    "group": "uncertain / extra demand",
+    "expected": "Needs official clarification",
+    "source": "SRC-01,SRC-01,SRC-02,SRC-03"
+  },
+  {
+    "id": "UNCERTAIN-13",
+    "group": "uncertain / extra demand",
+    "expected": "Needs official clarification",
+    "source": "SRC-01,SRC-01"
+  },
+  {
+    "id": "UNCERTAIN-14",
+    "group": "uncertain / extra demand",
+    "expected": "Needs official clarification",
+    "source": "SRC-01,SRC-02,SRC-01,SRC-01"
+  },
+  {
+    "id": "UNCERTAIN-15",
+    "group": "uncertain / extra demand",
+    "expected": "Needs official clarification",
+    "source": "SRC-01,SRC-01,SRC-01,SRC-01"
+  },
+  {
+    "id": "TEXT-1",
+    "group": "noisy text extraction",
+    "expected": "AMINA RAHMAN",
+    "source": "SRC-03 / synthetic text; not raw-image OCR"
+  },
+  {
+    "id": "TEXT-2",
+    "group": "noisy text extraction",
+    "expected": "Amina  Rahman",
+    "source": "SRC-03 / synthetic text; not raw-image OCR"
+  },
+  {
+    "id": "TEXT-3",
+    "group": "noisy text extraction",
+    "expected": "আমিনা রহমান",
+    "source": "SRC-03 / synthetic text; not raw-image OCR"
+  },
+  {
+    "id": "TEXT-4",
+    "group": "noisy text extraction",
+    "expected": "Amina Rahman",
+    "source": "SRC-03 / synthetic text; not raw-image OCR"
+  },
+  {
+    "id": "TEXT-5",
+    "group": "noisy text extraction",
+    "expected": "Amina Rahman",
+    "source": "SRC-03 / synthetic text; not raw-image OCR"
+  },
+  {
+    "id": "TEXT-6",
+    "group": "noisy text extraction",
+    "expected": "Amina Rahaman",
+    "source": "SRC-03 / synthetic text; not raw-image OCR"
+  },
+  {
+    "id": "TEXT-7",
+    "group": "noisy text extraction",
+    "expected": "Amina Rahman",
+    "source": "SRC-03 / synthetic text; not raw-image OCR"
+  },
+  {
+    "id": "TEXT-8",
+    "group": "noisy text extraction",
+    "expected": "Amina Rahman",
+    "source": "SRC-03 / synthetic text; not raw-image OCR"
+  },
+  {
+    "id": "TEXT-9",
+    "group": "noisy text extraction",
+    "expected": "Amina Rahman",
+    "source": "SRC-03 / synthetic text; not raw-image OCR"
+  },
+  {
+    "id": "TEXT-10",
+    "group": "noisy text extraction",
+    "expected": "Amina Rahman",
+    "source": "SRC-03 / synthetic text; not raw-image OCR"
+  }
+]

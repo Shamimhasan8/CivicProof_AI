@@ -1,0 +1,445 @@
+{
+  "sources": [
+    {
+      "id": "SRC-01",
+      "title": "Documents Checklist for e-Passport Enrollment",
+      "authority": "Department of Immigration and Passports",
+      "url": "https://www.epassport.gov.bd/landing/notices/160",
+      "published": "2024-10-21",
+      "retrieved": "2026-11-15",
+      "version": "notice-160@2024-10-21",
+      "scope": "Bangladesh enrolment; checklist includes conditional cases",
+      "status": "Source located; specialist review pending",
+      "access": "Search-index passage retrieved; direct page is client-rendered"
+    },
+    {
+      "id": "SRC-02",
+      "title": "Citizen Charter — e-Passport re-issue",
+      "authority": "Department of Immigration and Passports",
+      "url": "https://dip.gov.bd/pages/static-pages/6922e033933eb65569e25f86",
+      "published": null,
+      "retrieved": "2026-11-15",
+      "version": "charter@2026-11-15",
+      "scope": "Bangladesh; e-Passport section only",
+      "status": "Source located; specialist review pending",
+      "access": "Search-index passage retrieved; direct fetch returned 502"
+    },
+    {
+      "id": "SRC-03",
+      "title": "e-Passport application form (new / re-issue)",
+      "authority": "Department of Immigration and Passports",
+      "url": "https://www.epassport.gov.bd/api/v1/registrations/download-offline-form",
+      "published": null,
+      "retrieved": "2026-11-15",
+      "version": "form@2026-11-15",
+      "scope": "Application fields and document consistency",
+      "status": "Source located; specialist review pending",
+      "access": "Search-index PDF text"
+    },
+    {
+      "id": "SRC-04",
+      "title": "Grievance Redress System — public guidance",
+      "authority": "Cabinet Division, Bangladesh",
+      "url": "https://www.grs.gov.bd/",
+      "published": null,
+      "retrieved": "2026-11-15",
+      "version": "grs@2026-11-15",
+      "scope": "Grievance channels; not passport eligibility",
+      "status": "Source located; specialist review pending",
+      "access": "Public page retrieved; complaint exclusions apply"
+    },
+    {
+      "id": "SRC-05",
+      "title": "myGov service portal",
+      "authority": "Government of Bangladesh",
+      "url": "https://www.mygov.bd/",
+      "published": null,
+      "retrieved": "2026-11-15",
+      "version": "link-only@2026-11-15",
+      "scope": "Discovery link only; no executable rules",
+      "status": "Not verified — fetch timed out",
+      "access": "No passage ingested"
+    }
+  ],
+  "rules": [
+    {
+      "id": "R01",
+      "title": "Printed online application",
+      "bn": "অনলাইন আবেদনপত্রের প্রিন্ট কপি",
+      "passage": "আবেদনকারী কর্তৃক অনলাইনে আবেদনকৃত (পিডিএফ) ফরম প্রিন্টেড কপি।",
+      "condition": "always",
+      "doc": "application",
+      "terms": [
+        "application",
+        "printed form",
+        "আবেদন",
+        "ফরম"
+      ],
+      "source": "SRC-01",
+      "clause": "1",
+      "exception": "",
+      "version": "0.1",
+      "review": "Draft mapping · specialist review pending"
+    },
+    {
+      "id": "R02",
+      "title": "Offline payment receipt",
+      "bn": "অফলাইন পেমেন্টের চালান রশিদ",
+      "passage": "পাসপোর্টের ফি জমা প্রদানের চালান রশিদ (অফলাইন পেমেন্টের ক্ষেত্রে)।",
+      "condition": "offline",
+      "doc": "receipt",
+      "terms": [
+        "payment",
+        "receipt",
+        "চালান",
+        "রশিদ"
+      ],
+      "source": "SRC-01",
+      "clause": "2",
+      "exception": "",
+      "version": "0.1",
+      "review": "Draft mapping · specialist review pending"
+    },
+    {
+      "id": "R03",
+      "title": "NID original and copy, over age 20",
+      "bn": "২০ বছরের ঊর্ধ্বে এনআইডির মূল ও কপি",
+      "passage": "জাতীয় পরিচয় পত্রের মূল ও ফটোকপি (২০ বছরের উর্ধ্বের নাগরিকদের জন্য)।",
+      "condition": "over20",
+      "doc": "nid",
+      "terms": [
+        "nid",
+        "national id",
+        "পরিচয়",
+        "এনআইডি"
+      ],
+      "source": "SRC-01",
+      "clause": "4",
+      "exception": "Age boundary and other cases need the full applicable guidance.",
+      "version": "0.1",
+      "review": "Draft mapping · specialist review pending"
+    },
+    {
+      "id": "R04",
+      "title": "Evidence of present address",
+      "bn": "বর্তমান ঠিকানার প্রমাণ",
+      "passage": "বর্তমান ঠিকানা প্রমাণের স্বপক্ষে Job ID/Student ID/গ্যাস বিলের কপি/ বিদ্যুৎ বিলের কপি/ টেলিফোন বিলের কপি/পানির বিলের কপি যেটি প্রযোজ্য সেটার মূলকপি প্রদর্শন করা।",
+      "condition": "always",
+      "doc": "address",
+      "terms": [
+        "address",
+        "utility",
+        "student id",
+        "ঠিকানা",
+        "বিদ্যুৎ",
+        "গ্যাস"
+      ],
+      "source": "SRC-01",
+      "clause": "5",
+      "exception": "",
+      "version": "0.1",
+      "review": "Draft mapping · specialist review pending"
+    },
+    {
+      "id": "R05",
+      "title": "Adoption or guardianship order",
+      "bn": "দত্তক বা অভিভাবকত্বের আদেশ",
+      "passage": "দত্তক/অভিভাবকত্ব গ্রহণের ক্ষেত্রে সুরক্ষা সেবা বিভাগ, স্বরাষ্ট মন্ত্রণালয় হতে জারীকৃত আদেশের কপি।",
+      "condition": "adopted",
+      "doc": "adoption",
+      "terms": [
+        "adoption",
+        "guardianship",
+        "দত্তক",
+        "অভিভাবকত্ব"
+      ],
+      "source": "SRC-01",
+      "clause": "6",
+      "exception": "",
+      "version": "0.1",
+      "review": "Draft mapping · specialist review pending"
+    },
+    {
+      "id": "R06",
+      "title": "Technical profession certificate",
+      "bn": "টেকনিক্যাল পেশার সনদ",
+      "passage": "টেকনিক্যাল পেশা প্রমাণের স্বপক্ষে (ডাক্তার, ইঞ্জিনিয়ার, ড্রাইভার ইত্যাদি) টেকনিক্যাল সনদের কপি।",
+      "condition": "technical",
+      "doc": "technical",
+      "terms": [
+        "technical",
+        "engineer",
+        "doctor",
+        "driver",
+        "টেকনিক্যাল",
+        "ইঞ্জিনিয়ার"
+      ],
+      "source": "SRC-01",
+      "clause": "7",
+      "exception": "",
+      "version": "0.1",
+      "review": "Draft mapping · specialist review pending"
+    },
+    {
+      "id": "R07",
+      "title": "Previous passport original and copy",
+      "bn": "পুরোনো পাসপোর্টের মূল ও কপি",
+      "passage": "রি-ইস্যু আবেদনের ক্ষেত্রে মূল পাসপোর্ট (Original Passport) এবং পাসপোর্টের ফটোকপি",
+      "condition": "notLost",
+      "doc": "passport",
+      "terms": [
+        "previous passport",
+        "old passport",
+        "মূল পাসপোর্ট",
+        "পুরোনো পাসপোর্ট"
+      ],
+      "source": "SRC-01",
+      "clause": "8",
+      "exception": "For a lost passport, use the lost-passport path and ask the office about replacement evidence.",
+      "version": "0.1",
+      "review": "Draft mapping · specialist review pending"
+    },
+    {
+      "id": "R08",
+      "title": "3R photo for a child under 6",
+      "bn": "৬ বছরের নিচে শিশুর 3R ছবি",
+      "passage": "ধূসর ব্যাকগ্রাউন্ডের 3R সাইজের ফটো (০৬ বছরের নিচে শিশুদের ক্ষেত্রে)।",
+      "condition": "under6",
+      "doc": "photo",
+      "terms": [
+        "photo",
+        "3r",
+        "ফটো",
+        "ছবি"
+      ],
+      "source": "SRC-01",
+      "clause": "9",
+      "exception": "",
+      "version": "0.1",
+      "review": "Draft mapping · specialist review pending"
+    },
+    {
+      "id": "R09",
+      "title": "Parent NID copy for a minor",
+      "bn": "অপ্রাপ্তবয়স্কের পিতা বা মাতার এনআইডি",
+      "passage": "অপ্রাপ্ত বয়স্ক আবেদনকারীর ক্ষেত্রে পিতা/মাতার জাতীয় পরিচয়পত্রের কপি।",
+      "condition": "minor",
+      "doc": "parentNid",
+      "terms": [
+        "parent nid",
+        "father nid",
+        "mother nid",
+        "পিতা",
+        "মাতা"
+      ],
+      "source": "SRC-01",
+      "clause": "10",
+      "exception": "",
+      "version": "0.1",
+      "review": "Draft mapping · specialist review pending"
+    },
+    {
+      "id": "R10",
+      "title": "Medical evidence for missing biometrics",
+      "bn": "বায়োমেট্রিক অনুপস্থিতির মেডিকেল সনদ",
+      "passage": "মেডিকেল সনদ (চোখের আইরিশ, ফিঙ্গারপ্রিন্ট মিসিং হবার ক্ষেত্রে)।",
+      "condition": "biometrics",
+      "doc": "medical",
+      "terms": [
+        "medical",
+        "fingerprint",
+        "iris",
+        "মেডিকেল",
+        "ফিঙ্গারপ্রিন্ট"
+      ],
+      "source": "SRC-01",
+      "clause": "11",
+      "exception": "",
+      "version": "0.1",
+      "review": "Draft mapping · specialist review pending"
+    },
+    {
+      "id": "R11",
+      "title": "Marriage evidence after status change",
+      "bn": "বৈবাহিক অবস্থার পরিবর্তনের সনদ",
+      "passage": "বৈবাহিক অবস্থার পরিবর্তন হলে বিবাহ সনদ/কাবিন নামার কপি।",
+      "condition": "married",
+      "doc": "marriage",
+      "terms": [
+        "marriage",
+        "married",
+        "বিবাহ",
+        "কাবিন"
+      ],
+      "source": "SRC-01",
+      "clause": "14",
+      "exception": "",
+      "version": "0.1",
+      "review": "Draft mapping · specialist review pending"
+    },
+    {
+      "id": "R12",
+      "title": "Divorce evidence after divorce",
+      "bn": "বিবাহ বিচ্ছেদের সনদ",
+      "passage": "বিবাহ বিচ্ছেদ হলে বিচ্ছেদের সনদ/তালাক নামার কপি।",
+      "condition": "divorced",
+      "doc": "divorce",
+      "terms": [
+        "divorce",
+        "তালাক",
+        "বিচ্ছেদ"
+      ],
+      "source": "SRC-01",
+      "clause": "15",
+      "exception": "",
+      "version": "0.1",
+      "review": "Draft mapping · specialist review pending"
+    },
+    {
+      "id": "R13",
+      "title": "Original GD for a lost passport",
+      "bn": "হারানো পাসপোর্টের মূল জিডি",
+      "passage": "হারানো পাসপোর্টের ক্ষেত্রে সাধারণ ডায়েরী (GD) এর মূল কপি।",
+      "condition": "lost",
+      "doc": "gd",
+      "terms": [
+        "gd",
+        "general diary",
+        "lost passport",
+        "police report",
+        "জিডি",
+        "ডায়েরী",
+        "হারানো"
+      ],
+      "source": "SRC-01",
+      "clause": "16",
+      "exception": "",
+      "version": "0.1",
+      "review": "Draft mapping · specialist review pending"
+    },
+    {
+      "id": "R14",
+      "title": "Information correction needs current guidance",
+      "bn": "তথ্য সংশোধনে বর্তমান নির্দেশনা যাচাই",
+      "passage": "তথ্য পরিবর্তনের ক্ষেত্রে স্বরাষ্ট্র মন্ত্রণালয় কর্তৃক জারিকৃত পরিপত্র",
+      "condition": "changes",
+      "doc": "correction",
+      "terms": [
+        "correction",
+        "name change",
+        "name mismatch",
+        "সংশোধন",
+        "গড়মিল",
+        "অঙ্গীকারনামা"
+      ],
+      "source": "SRC-02",
+      "clause": "11",
+      "exception": "Charter refers to a circular dated 18 February 2025; its full text has not been reviewed. The 2024 checklist alone cannot resolve correction requirements.",
+      "version": "0.1",
+      "review": "Draft mapping · specialist review pending"
+    },
+    {
+      "id": "R15",
+      "title": "Complete changed-information form pages",
+      "bn": "পরিবর্তিত তথ্যের ফরমের পৃষ্ঠা পূরণ",
+      "passage": "Note: If you apply for ePassport re-issue and need changes, please fill up related information in Pages 2-3.",
+      "condition": "changes",
+      "doc": "changeForm",
+      "terms": [
+        "changed information",
+        "pages 2",
+        "পৃষ্ঠা",
+        "তথ্য পরিবর্তন"
+      ],
+      "source": "SRC-03",
+      "clause": "page 2",
+      "exception": "",
+      "version": "0.1",
+      "review": "Draft mapping · specialist review pending"
+    },
+    {
+      "id": "R16",
+      "title": "Check applicable dual citizenship evidence",
+      "bn": "দ্বৈত নাগরিকত্বের প্রযোজ্য সনদ",
+      "passage": "দ্বৈত নাগরিকত্বের ক্ষেত্রে স্বরাষ্ট্র মন্ত্রণালয়ের Dual Citizenship সনদ (প্রযোজ্য ক্ষেত্রে)।",
+      "condition": "dual",
+      "doc": "dualCertificate",
+      "terms": [
+        "dual citizenship",
+        "দ্বৈত নাগরিকত্ব"
+      ],
+      "source": "SRC-01",
+      "clause": "21",
+      "exception": "Applicability and exceptions require official confirmation.",
+      "version": "0.1",
+      "review": "Draft mapping · specialist review pending"
+    }
+  ],
+  "hashScope": "Ingested excerpt records, not complete source documents",
+  "ingestedExcerptHashes": [
+    {
+      "rule": "R01",
+      "sha256": "88d2a2628a60acbbcad7db396d4ac88288bc8d87327431fb56671cda915af63c"
+    },
+    {
+      "rule": "R02",
+      "sha256": "213d88177ff4b706c85552c1e1eadd0de3deb0606fff3925e48aaea5a4cffb37"
+    },
+    {
+      "rule": "R03",
+      "sha256": "480faeb45404cd4675e2f2b8c0cdc65e65fb6d942c775fc576d1529df701e3f2"
+    },
+    {
+      "rule": "R04",
+      "sha256": "0c900dd70c20dfceb138a1a52d48c5a33756c1bcae8c290fc7ddb0a4d0cfd7ba"
+    },
+    {
+      "rule": "R05",
+      "sha256": "ef4a7b0178d36e6259f9fe1dd38d972f71b8b431d0d246d90f8f947bfe6404b3"
+    },
+    {
+      "rule": "R06",
+      "sha256": "3aaae8ad9475e37c438751ae19a89fedffa83df393e545d8cde6364b1a138f59"
+    },
+    {
+      "rule": "R07",
+      "sha256": "d618b9f0ceb74e6f357c8bc33a7141a78046ef3120fca9fba042f7265aebbf1c"
+    },
+    {
+      "rule": "R08",
+      "sha256": "ae1a6ab6f28bd869378252e4d8527bcdf43c91ec8ca37dcf21909acfadb1be56"
+    },
+    {
+      "rule": "R09",
+      "sha256": "052f40910880dbb63ee888ec86914911fdc2607678f6816723c3da7f45a3214a"
+    },
+    {
+      "rule": "R10",
+      "sha256": "b7a7887539511a700eb5e93a1c058bb522c4c55dbe3c504aa5a2572ad63a003e"
+    },
+    {
+      "rule": "R11",
+      "sha256": "34111d50d0603e26c270ea9b2fefdbb57058407ef985ce0cd58142ae86e37e26"
+    },
+    {
+      "rule": "R12",
+      "sha256": "e425281f16aa4f7072aef601d9787dc7aed259b9384c154aa1a041e4fd28c201"
+    },
+    {
+      "rule": "R13",
+      "sha256": "0119ed3ce884cb7a547efdafef69c5ea7b6676c79f5e4fa660d2c61d569741dc"
+    },
+    {
+      "rule": "R14",
+      "sha256": "26008245656f72f7e7fcdd87a2c4ab34e20ae373f00122876f9008618bdaf0a3"
+    },
+    {
+      "rule": "R15",
+      "sha256": "daa26bc32b0a73009291d5988ffa50c1f2e7a65669fe528b3df1ac15085138b6"
+    },
+    {
+      "rule": "R16",
+      "sha256": "5566f37805edc7392f4a50f3e168b7de7d46fb257044902c75ee01b51f3358cf"
+    }
+  ]
+}
