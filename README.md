@@ -6,11 +6,12 @@ Citizen Service Evidence & Accountability Platform · Team AGI
 
 ## Run
 
-Node 22.13+ is required. Install the locked dependencies with `npm ci`, then `npm run dev`. For the managed preview, run `sites-preview start /workspace/sites/civicproof-ai`.
+Use Node 22.x. Install the locked dependencies with `npm ci`, then `npm run dev`. `npm run build` and `npm start` use native Next.js. Vercel configuration is in `vercel.json`; see DEPLOYMENT.md. The original Sites build is preserved separately as `npm run build:sites` and requires its original manifest.
 
 - `npm test` — 60 synthetic benchmark cases plus safety/provenance regressions; creates `public/reports/evaluation.json`.
 - `npm run typecheck` — TypeScript validation.
-- `npm run build` — Vinext / Cloudflare Worker build.
+- `npm run test:production` — verify the built Next.js server, all 11 citizen routes, and the request-checker API. Run after `npm run build`.
+- `npm run build` — native Next.js production build for Vercel.
 
 ## Working features
 
@@ -26,7 +27,7 @@ No LLM, embedding provider, government integration, legal-rule reviewer, or prod
 
 ## Architecture
 
-Next-compatible React 19 + TypeScript on Vinext. Cloudflare Worker hosts the UI and `/api/evidence`. A shared deterministic engine runs comparisons and conditional evaluation. The backend handles request retrieval without persistence. Case state uses sessionStorage; only UI language uses localStorage. Browser restore may preserve sessionStorage. Explicit deletion clears the case state.
+Next.js 16 + React 19 + TypeScript. The standard Vercel deployment hosts the UI and `/api/evidence`; the original Vinext / Cloudflare build remains an optional separate target. A shared deterministic engine runs comparisons and conditional evaluation. The backend handles request retrieval without persistence. Case state uses sessionStorage; only UI language uses localStorage. Browser restore may preserve sessionStorage. Explicit deletion clears the case state.
 
 ## Data & evidence
 

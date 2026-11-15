@@ -1,4 +1,21 @@
-# Deployment
+# Vercel deployment (GitHub checkout)
+
+This repository now defaults to native Next.js on Vercel. `npm run build` runs `next build`, which produces `.next`; it does not import `vite.config.ts` or require `.openai/hosting.json`.
+
+- Framework preset: Next.js
+- Build command: `npm run build`
+- Output directory: `.next`
+- Install command: default (`npm install` / `npm ci` with the committed lockfile)
+- Node.js: 22.x
+- Root directory: repository root
+
+`vercel.json` declares the framework, build command and output directory. The Node major is pinned in package.json and the lockfile. The catch-all app page restores the dashboard and all citizen routes omitted from the GitHub upload. PDF.js external loading is marked for both the Next.js and Vite bundlers.
+
+The production build and all 11 primary HTML routes plus the real API handler passed locally on 15 November 2026. Remote Vercel deployment must be verified after these changes reach main; local success is not a claim that the remote deployment has completed.
+
+The original Sites scripts are available as `dev:sites`, `build:sites`, and `start:sites`. They require their original Sites manifest and runtime configuration; the GitHub upload omitted that manifest. Standard Next.js type checking excludes Worker-only build configuration. Do not add a fabricated Sites project ID to fix Vercel.
+
+## Original Sites target (separate deployment)
 
 ## Current supported target
 Sites hosting: Cloudflare Worker ES module built by Vinext. The project ID is preserved in .openai/hosting.json. No D1 or R2 binding is enabled. No paid infrastructure or secrets are required.
