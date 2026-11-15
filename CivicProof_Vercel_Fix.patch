@@ -1,0 +1,209 @@
+diff --git a/DEPLOYMENT.md b/DEPLOYMENT.md
+index 65c069a..435eee8 100644
+--- a/DEPLOYMENT.md
++++ b/DEPLOYMENT.md
+@@ -1,4 +1,21 @@
+-# Deployment
++# Vercel deployment (GitHub checkout)
++
++This repository now defaults to native Next.js on Vercel. `npm run build` runs `next build`, which produces `.next`; it does not import `vite.config.ts` or require `.openai/hosting.json`.
++
++- Framework preset: Next.js
++- Build command: `npm run build`
++- Output directory: `.next`
++- Install command: default (`npm install` / `npm ci` with the committed lockfile)
++- Node.js: 22.x
++- Root directory: repository root
++
++`vercel.json` declares the framework, build command and output directory. The Node major is pinned in package.json and the lockfile. The catch-all app page restores the dashboard and all citizen routes omitted from the GitHub upload. PDF.js external loading is marked for both the Next.js and Vite bundlers.
++
++The production build and all 11 primary HTML routes plus the real API handler passed locally on 15 November 2026. Remote Vercel deployment must be verified after these changes reach main; local success is not a claim that the remote deployment has completed.
++
++The original Sites scripts are available as `dev:sites`, `build:sites`, and `start:sites`. They require their original Sites manifest and runtime configuration; the GitHub upload omitted that manifest. Standard Next.js type checking excludes Worker-only build configuration. Do not add a fabricated Sites project ID to fix Vercel.
++
++## Original Sites target (separate deployment)
+ 
+ ## Current supported target
+ Sites hosting: Cloudflare Worker ES module built by Vinext. The project ID is preserved in .openai/hosting.json. No D1 or R2 binding is enabled. No paid infrastructure or secrets are required.
+diff --git a/README.md b/README.md
+index 408ebc0..93a8bbb 100644
+--- a/README.md
++++ b/README.md
+@@ -6,11 +6,12 @@ Citizen Service Evidence & Accountability Platform · Team AGI
+ 
+ ## Run
+ 
+-Node 22.13+ is required. Install the locked dependencies with `npm ci`, then `npm run dev`. For the managed preview, run `sites-preview start /workspace/sites/civicproof-ai`.
++Use Node 22.x. Install the locked dependencies with `npm ci`, then `npm run dev`. `npm run build` and `npm start` use native Next.js. Vercel configuration is in `vercel.json`; see DEPLOYMENT.md. The original Sites build is preserved separately as `npm run build:sites` and requires its original manifest.
+ 
+ - `npm test` — 60 synthetic benchmark cases plus safety/provenance regressions; creates `public/reports/evaluation.json`.
+ - `npm run typecheck` — TypeScript validation.
+-- `npm run build` — Vinext / Cloudflare Worker build.
++- `npm run test:production` — verify the built Next.js server, all 11 citizen routes, and the request-checker API. Run after `npm run build`.
++- `npm run build` — native Next.js production build for Vercel.
+ 
+ ## Working features
+ 
+@@ -26,7 +27,7 @@ No LLM, embedding provider, government integration, legal-rule reviewer, or prod
+ 
+ ## Architecture
+ 
+-Next-compatible React 19 + TypeScript on Vinext. Cloudflare Worker hosts the UI and `/api/evidence`. A shared deterministic engine runs comparisons and conditional evaluation. The backend handles request retrieval without persistence. Case state uses sessionStorage; only UI language uses localStorage. Browser restore may preserve sessionStorage. Explicit deletion clears the case state.
++Next.js 16 + React 19 + TypeScript. The standard Vercel deployment hosts the UI and `/api/evidence`; the original Vinext / Cloudflare build remains an optional separate target. A shared deterministic engine runs comparisons and conditional evaluation. The backend handles request retrieval without persistence. Case state uses sessionStorage; only UI language uses localStorage. Browser restore may preserve sessionStorage. Explicit deletion clears the case state.
+ 
+ ## Data & evidence
+ 
+diff --git a/app/[...slug]/page.tsx b/app/[...slug]/page.tsx
+new file mode 100644
+index 0000000..34fe8c3
+--- /dev/null
++++ b/app/[...slug]/page.tsx
+@@ -0,0 +1,5 @@
++import CivicApp from '@/components/civic/app';
++
++export default function Page() {
++  return <CivicApp />;
++}
+diff --git a/components/civic/app.tsx b/components/civic/app.tsx
+index 8e8ca82..627392c 100644
+--- a/components/civic/app.tsx
++++ b/components/civic/app.tsx
+@@ -53,7 +53,7 @@ export default function CivicApp(){
+    else{
+     let input:any=file;
+     if(file.type==='application/pdf'){
+-     const pdfUrl='https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.min.mjs';const pdfjs=await import(/* @vite-ignore */pdfUrl);pdfjs.GlobalWorkerOptions.workerSrc='https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.worker.min.mjs';const pdf=await pdfjs.getDocument({data:await file.arrayBuffer(),isEvalSupported:false}).promise;if(pdf.numPages>5)throw new Error('Maximum 5 PDF pages.');for(let i=1;i<=pdf.numPages;i++){const pg=await pdf.getPage(i);const content=await pg.getTextContent();text+=content.items.map((v:any)=>v.str+(v.hasEOL?'\n':' ')).join('')+'\n'}
++     const pdfUrl='https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.min.mjs';const pdfjs=await import(/* webpackIgnore: true */ /* @vite-ignore */pdfUrl);pdfjs.GlobalWorkerOptions.workerSrc='https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.worker.min.mjs';const pdf=await pdfjs.getDocument({data:await file.arrayBuffer(),isEvalSupported:false}).promise;if(pdf.numPages>5)throw new Error('Maximum 5 PDF pages.');for(let i=1;i<=pdf.numPages;i++){const pg=await pdf.getPage(i);const content=await pg.getTextContent();text+=content.items.map((v:any)=>v.str+(v.hasEOL?'\n':' ')).join('')+'\n'}
+      if(!/\b(?:Name|DOB|Date of Birth)\s*:/i.test(text)){const pg=await pdf.getPage(1);const vp=pg.getViewport({scale:2});const canvas=document.createElement('canvas');canvas.width=vp.width;canvas.height=vp.height;await pg.render({canvasContext:canvas.getContext('2d'),viewport:vp}).promise;input=canvas.toDataURL();text='';}
+     }
+     if(!text){if(!(window as any).Tesseract){await new Promise<void>((resolve,reject)=>{const script=document.createElement('script');script.src='https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';script.onload=()=>resolve();script.onerror=()=>reject(new Error('OCR download unavailable. Try the sample TXT or enter fields manually.'));document.head.appendChild(script)})}const worker=await (window as any).Tesseract.createWorker('eng+ben');try{const result=await worker.recognize(input);text=result.data.text;setToast('OCR confidence: '+Math.round(result.data.confidence)+'% · please review all values')}finally{await worker.terminate()}}
+@@ -112,7 +112,7 @@ export default function CivicApp(){
+  <div className="section-toolbar"><div className="inline-meta"><Badge tone="green">v{VERSION}</Badge><span>{t('Team AGI · CivicSphere AI','টিম AGI · CivicSphere AI')}</span></div><a className="button secondary small" href="/reports/CivicProof_Submission_Package.zip" download><Download size={15}/>{t('Submission package','জমা দেওয়ার প্যাকেজ')}</a></div>
+  <div className="docs-layout"><nav className="docs-nav">{[['summary','Overview'],['architecture','Architecture'],['ai','AI & retrieval'],['evaluation','Evaluation'],['privacy','Privacy & security'],['demo','Judge walkthrough'],['roadmap','Status & roadmap']].map(([id,label])=><a key={id} href={'#'+id}>{label}<ChevronRight size={13}/></a>)}</nav><div className="docs-content">
+  <section className="panel doc-section" id="summary"><Badge tone="green">Implemented</Badge><h2>Citizen Service Evidence & Accountability Platform</h2><p>CivicProof AI helps people prepare for Bangladesh e-Passport re-issue, compare fictional document fields, inspect official-source passages, and organize their service journey. It complements the e-Passport portal and GRS. It has no government integration or authority.</p><div className="docs-principles"><div><ShieldCheck size={23}/><h4>Evidence first</h4><p>Sources, versions, passages, and conditions remain inspectable.</p></div><div><Eye size={23}/><h4>Citizen confirmation</h4><p>Extracted fields never become confirmed without user review.</p></div><div><LockKeyhole size={23}/><h4>Synthetic by default</h4><p>No real identity documents in this demonstration.</p></div></div><p>Design inspiration: preparation checklists (UK Check and Send), case histories (USCIS), provenance (Estonia), clarification pathways (Your Europe / SOLVIT), executable conditions (Australian Rules as Code), and the distinction between uploaded and authenticated documents (DigiLocker). These are conceptual inspirations, not integrations or equivalence claims.</p><div className="button-row"><a className="text-button" href="/reports/RESEARCH.md" download>Research references<Download size={14}/></a><a className="text-button" href="/reports/DESIGN_SYSTEM.md" download>Design system<Download size={14}/></a><a className="text-button" href="/reports/screenshots/desktop-overview.jpg" target="_blank" rel="noreferrer">Actual interface screenshot<ArrowUpRight size={14}/></a></div></section>
+- <section className="panel doc-section" id="architecture"><Badge tone="green">Implemented</Badge><h2>Architecture & data lifecycle</h2><div className="architecture"><div><Files size={20}/><strong>Synthetic file</strong><small>Browser only</small></div><ArrowRight size={16}/><div><ScanLine size={20}/><strong>Extract & confirm</strong><small>Tesseract / PDF.js</small></div><ArrowRight size={16}/><div><ListChecks size={20}/><strong>Evidence engine</strong><small>Rules + retrieval</small></div><ArrowRight size={16}/><div><GitBranch size={20}/><strong>Citizen action</strong><small>Timeline / draft</small></div></div><p>Next-compatible React 19 + TypeScript on Vinext, deployed as a Cloudflare Worker. The evidence endpoint serves a versioned source registry and deterministic evaluation. Browser sessionStorage holds only the fictional working case. Case state expires when the tab session ends; browser restore behavior can preserve a session. Use Delete all records for explicit deletion.</p><p>Original file → local OCR or PDF text extraction → editable fields → explicit confirmation → conservative comparison → source-linked finding → optional timeline record → editable clarification draft. File bytes and OCR text are not sent to the application backend. The request checker sends the fictional request text and selected conditions to the same-origin API; the API does not persist them. OCR libraries and language models download from external CDNs.</p><p>Source → version → candidate rule → confirmed field → finding → explanation → citizen action. The reviewed-rule stage remains pending specialist review. No PostgreSQL, pgvector, D1, or R2 production data store is connected. A proposed SQL migration is included for future deployment.</p></section>
++ <section className="panel doc-section" id="architecture"><Badge tone="green">Implemented</Badge><h2>Architecture & data lifecycle</h2><div className="architecture"><div><Files size={20}/><strong>Synthetic file</strong><small>Browser only</small></div><ArrowRight size={16}/><div><ScanLine size={20}/><strong>Extract & confirm</strong><small>Tesseract / PDF.js</small></div><ArrowRight size={16}/><div><ListChecks size={20}/><strong>Evidence engine</strong><small>Rules + retrieval</small></div><ArrowRight size={16}/><div><GitBranch size={20}/><strong>Citizen action</strong><small>Timeline / draft</small></div></div><p>Next.js 16 with React 19 and TypeScript. This repository targets Vercel; the original Vinext / Cloudflare build remains an optional separate deployment path. The evidence endpoint serves a versioned source registry and deterministic evaluation. Browser sessionStorage holds only the fictional working case. Case state expires when the tab session ends; browser restore behavior can preserve a session. Use Delete all records for explicit deletion.</p><p>Original file → local OCR or PDF text extraction → editable fields → explicit confirmation → conservative comparison → source-linked finding → optional timeline record → editable clarification draft. File bytes and OCR text are not sent to the application backend. The request checker sends the fictional request text and selected conditions to the same-origin API; the API does not persist them. OCR libraries and language models download from external CDNs.</p><p>Source → version → candidate rule → confirmed field → finding → explanation → citizen action. The reviewed-rule stage remains pending specialist review. No PostgreSQL, pgvector, D1, or R2 production data store is connected. A proposed SQL migration is included for future deployment.</p></section>
+  <section className="panel doc-section" id="ai"><Badge tone="warning">Limited integration</Badge><h2>AI inventory, retrieval & prompts</h2><table><thead><tr><th>Component</th><th>Actual implementation</th><th>Status</th></tr></thead><tbody><tr><td>OCR</td><td>Tesseract.js 5.1.1, eng + ben; local browser inference</td><td>Implemented · network-dependent</td></tr><tr><td>PDF extraction</td><td>PDF.js 4.10.38; text or first-page OCR fallback</td><td>Implemented · max 5 pages</td></tr><tr><td>Retrieval</td><td>Bilingual keyword scoring over 16 clause-level mappings</td><td>Tested</td></tr><tr><td>Validation</td><td>Conditional checks, field confirmation, date validation</td><td>Tested</td></tr><tr><td>Clarification</td><td>Deterministic bilingual editable templates</td><td>Tested · no LLM</td></tr><tr><td>LLM / embeddings</td><td>No provider credentials configured</td><td>Planned</td></tr><tr><td>MCP / agents / fine-tuning</td><td>No runtime server or model training</td><td>Planned / not required for MVP</td></tr></tbody></table><p>No semantic, hybrid, graph, or agentic RAG is claimed. Retrieval has a fixed source allowlist; unknown, negated, and sensitive requests abstain. Context is bounded to four passages; deterministic checks avoid model calls. Token savings, provider cost, and model quality have not been measured.</p><p>The prompt registry includes future source-grounded extraction and explanation contracts with version identifiers and draft status. They are not presented as deployed LLM integrations. The development assistant authored the source and tests; there is no autonomous legal-rule approval.</p></section>
+  <section className="panel doc-section" id="evaluation"><Badge tone={evalReport?'green':'neutral'}>{evalReport?'Tested':'Report loading'}</Badge><h2>Reproducible synthetic evaluation</h2>{evalReport?<><div className="evaluation-stats"><div><strong>{evalReport.passed}/{evalReport.total}</strong><span>Synthetic benchmark assertions</span></div><div><strong>{evalReport.metrics.mismatchPrecision}</strong><span>Mismatch precision</span></div><div><strong>{evalReport.metrics.mismatchRecall}</strong><span>Mismatch recall</span></div><div><strong>{evalReport.metrics.abstentionRate}</strong><span>Unknown-request abstention</span></div></div><p>Run: <code>node tests/evaluate.mjs</code>. Date: {evalReport.runDate}. Labels are developer-generated; this is not external legal or OCR validation. This benchmark covers field consistency, conditional mappings, unknown requests, and noisy text parsing. Raw-image OCR accuracy and language-specific OCR quality are not measured by these cases.</p><a className="text-button" href="/reports/evaluation.json" download>Download actual results<Download size={14}/></a></>:<p>No evaluation metrics are shown until the generated report is available.</p>}<p>Known retrieval limitation: keyword overlap is insufficient to establish that a complex or compound request is fully supported. All results are provisional preparation guidance. The baseline compares exact case-sensitive strings; normalized comparison handles spacing, case, and Bangla digits without fuzzy identity matching.</p></section>
+  <section className="panel doc-section" id="privacy"><Badge tone="green">Implemented</Badge><h2>Privacy, safety & review boundaries</h2><ul><li>Watermarked synthetic-only file extraction; MIME, signature, file size, text-length and page-count checks.</li><li>No government impersonation, complaint submission, identity authentication, or legal eligibility decisions.</li><li>React text escaping; document content is treated as data. No instructions in documents are executed.</li><li>Application records remain in this tab. Export and explicit deletion are available in Settings.</li><li>Public administrative editing is disabled. Registry changes require source-code access.</li><li>Only request text and selected circumstances reach the request-checker API. Application code does not log request bodies. Hosting infrastructure may retain operational logs.</li><li>Private hosting access is managed by Sites. This build does not claim privacy-law certification. There is no application-level distributed rate limiter yet.</li></ul></section>
+diff --git a/package-lock.json b/package-lock.json
+index 94beebd..a1323b6 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -56,7 +56,7 @@
+         "wrangler": "4.92.0"
+       },
+       "engines": {
+-        "node": ">=22.13.0"
++        "node": "22.x"
+       }
+     },
+     "node_modules/@alloc/quick-lru": {
+diff --git a/package.json b/package.json
+index 9f70c4a..1b6598a 100644
+--- a/package.json
++++ b/package.json
+@@ -3,17 +3,21 @@
+   "version": "0.1.0",
+   "private": true,
+   "engines": {
+-    "node": ">=22.13.0"
++    "node": "22.x"
+   },
+   "scripts": {
+     "install:ci": "node scripts/install-ci.mjs",
+-    "dev": "node scripts/run-framework.mjs dev",
+-    "build": "node scripts/run-framework.mjs build",
+-    "start": "node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js dev --config dist/server/wrangler.json --local --persist-to .wrangler/state --ip 127.0.0.1 --inspector-port 0",
++    "dev": "next dev",
++    "build": "next build",
++    "start": "next start",
+     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
+     "db:generate": "drizzle-kit generate",
+     "test": "node tests/evaluate.mjs && node tests/api.mjs",
+-    "typecheck": "tsc --noEmit"
++    "typecheck": "tsc --noEmit",
++    "dev:sites": "node scripts/run-framework.mjs dev",
++    "build:sites": "node scripts/run-framework.mjs build",
++    "start:sites": "node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js dev --config dist/server/wrangler.json --local --persist-to .wrangler/state --ip 127.0.0.1 --inspector-port 0",
++    "test:production": "node scripts/verify-production.mjs"
+   },
+   "dependencies": {
+     "@base-ui/react": "^1.7.0",
+diff --git a/scripts/verify-production.mjs b/scripts/verify-production.mjs
+new file mode 100644
+index 0000000..95a3f5c
+--- /dev/null
++++ b/scripts/verify-production.mjs
+@@ -0,0 +1,44 @@
++import { spawn } from 'node:child_process';
++import assert from 'node:assert/strict';
++import { createServer } from 'node:net';
++
++// Reserve an available loopback port, then verify the actual Next production server.
++const port = await new Promise((resolve, reject) => {
++  const probe = createServer();
++  probe.once('error', reject);
++  probe.listen(0, '127.0.0.1', () => {
++    const address = probe.address();
++    probe.close(() => resolve(address.port));
++  });
++});
++const server = spawn(process.execPath, ['node_modules/next/dist/bin/next', 'start', '--hostname', '127.0.0.1', '--port', String(port)], { stdio: ['ignore', 'pipe', 'pipe'] });
++try {
++  await new Promise((resolve, reject) => {
++    const timer = setTimeout(() => reject(new Error('Production server startup timed out')), 20000);
++    let output = '';
++    server.stdout.on('data', chunk => {
++      output += String(chunk);
++      if (output.includes('Ready')) { clearTimeout(timer); resolve(); }
++    });
++    server.stderr.on('data', chunk => process.stderr.write(chunk));
++    server.once('error', error => { clearTimeout(timer); reject(error); });
++    server.once('exit', code => { clearTimeout(timer); reject(new Error(`Server exited before verification: ${code}`)); });
++  });
++  const origin = `http://127.0.0.1:${port}`;
++  for (const path of ['/', '/dashboard', '/document-check', '/requirements', '/requirement-checker', '/journey', '/clarification', '/services', '/sources', '/docs', '/settings']) {
++    const response = await fetch(origin + path, { signal: AbortSignal.timeout(10000) });
++    assert.equal(response.status, 200, path);
++    assert.match(await response.text(), /CivicProof/);
++    console.log('PASS', path);
++  }
++  const response = await fetch(origin + '/api/evidence', {
++    method: 'POST', headers: { 'Content-Type': 'application/json' },
++    body: JSON.stringify({ action: 'check', query: 'A bank statement', context: {} }),
++    signal: AbortSignal.timeout(10000),
++  });
++  assert.equal(response.status, 200);
++  assert.equal((await response.json()).status, 'Needs official clarification');
++  console.log('PASS production request-checker API');
++} finally {
++  server.kill('SIGTERM');
++}
+diff --git a/tsconfig.json b/tsconfig.json
+index b96b030..0b43b0a 100644
+--- a/tsconfig.json
++++ b/tsconfig.json
+@@ -48,6 +48,9 @@
+     ".wrangler",
+     ".sites-runtime",
+     "outputs",
+-    "work"
++    "work",
++    "vite.config.ts",
++    "scripts/vite",
++    "worker"
+   ]
+ }
+diff --git a/vercel.json b/vercel.json
+new file mode 100644
+index 0000000..0ee0dff
+--- /dev/null
++++ b/vercel.json
+@@ -0,0 +1,6 @@
++{
++  "$schema": "https://openapi.vercel.sh/vercel.json",
++  "framework": "nextjs",
++  "buildCommand": "npm run build",
++  "outputDirectory": ".next"
++}
